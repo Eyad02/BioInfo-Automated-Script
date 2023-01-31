@@ -1,0 +1,71 @@
+PS3='Please enter your choice: '
+options=("Reteive" "Pairwise" "MSA" "PhelogenticTree" "Fastq To Fasta" 
+"CG Content" "C count" "G count" "T count" "A count" "Quit")
+select opt in "${options[@]}"
+do
+case $opt in
+"Reteive")
+efetch -db nucleotide -format fasta -id AB021961.1 U50395.1 D49825.1 AB082923.1 D26608.1 > seq1.fasta
+head seq1.fasta
+;;
+"Pairwise")
+echo "1. local 2. Global "
+read x
+if [ $x = 1 ]; then
+makeblastdb -in sequence-3.fasta -dbtype nucl
+blastn -query seq1.fasta -db sequence-3.fasta -out local.txt
+elif [ $x = 2 ]; then
+echo "d3abeez"
+fi
+;;
+"MSA")
+muscle -in seq1.fasta -out alignment.html -html
+;;
+"PhelogenticTree")
+muscle -in seq1.fasta -out alignment.html -html -tree1 tree.phy
+head tree.phy
+;;
+"Fastq To Fasta")
+echo Please enter ur filename 
+read filename
+sed -n '1~4s/^@/>/p;2~4p' $filename > ERR000001_1.fasta
+head ERR000001_1.fasta
+;;
+"CG Content")
+echo Please enter ur filename 
+read filename
+echo "CG content = "
+grep '[CG]' -o $filename | wc -l
+;;
+"C count")
+echo Please enter ur filename 
+read filename
+echo "Cystosine (C) count = "
+grep '[C]' -o $filename | wc -l
+;;
+"G count")
+echo Please enter ur filename 
+read filename
+echo "Guanine (G) count = "
+grep '[G]' -o $filename | wc -l
+;;
+"T count")
+echo Please enter ur filename 
+read filename
+echo "Thymine (T) count = "
+grep '[T]' -o $filename | wc -l
+;;
+"A count")
+echo Please enter ur filename 
+read filename
+echo "Adenine (A) COUNT = "
+grep '[A]' -o $filename | wc -l
+;;
+"Quit")
+break
+;;
+*) echo "invalid option $REPLY";;
+esac
+done
+
+
